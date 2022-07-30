@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>git on 志宇日常</title><link>https://www.chihyu.me/tags/git/</link><description>Recent content in git on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 02 Jul 2022 14:11:17 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/tags/git/index.xml" rel="self" type="application/rss+xml"/><item><title>Git 匯出異動的檔案</title><link>https://www.chihyu.me/2022/07/git-guide-archive-export-files-with-diff/</link><pubDate>Sat, 02 Jul 2022 14:11:17 +0800</pubDate><guid>https://www.chihyu.me/2022/07/git-guide-archive-export-files-with-diff/</guid><description>&lt;img src="https://www.chihyu.me/images/git-guide/banner.jpg" alt="Featured image of post Git 匯出異動的檔案" />&lt;h2 id="main">Main&lt;/h2>
+&lt;p>比對兩個版本，並將有異動的檔案匯出到指定目錄&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git archive --output&lt;span class="o">=&lt;/span>&amp;lt;/folder/filename&amp;gt;.tar HEAD &lt;span class="k">$(&lt;/span>git diff --name-only &amp;lt;commit_id&amp;gt; &amp;lt;commit_id&amp;gt;&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">Example&lt;/h2>
+&lt;p>將版本 &lt;code>1b7760a&lt;/code> 及 版本 &lt;code>d3be133&lt;/code> 有異動的檔案，匯出到 &lt;code>/home/chihyu/Backup/&lt;/code> 檔名 &lt;code>test.tar&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git archive --output&lt;span class="o">=&lt;/span>/home/chihyu/Backup/test.tar HEAD &lt;span class="k">$(&lt;/span>git diff --name-only 1b7760a d3be133&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 比對只顯示檔案列表</title><link>https://www.chihyu.me/2022/07/git-guide-diff-name-only/</link><pubDate>Fri, 01 Jul 2022 14:20:46 +0800</pubDate><guid>https://www.chihyu.me/2022/07/git-guide-diff-name-only/</guid><description>&lt;img src="https://www.chihyu.me/images/git-guide/banner.jpg" alt="Featured image of post Git 比對只顯示檔案列表" />&lt;h2 id="intro">intro&lt;/h2>
+&lt;p>一般我們下 &lt;code>git diff&lt;/code> 的時候，就會顯示所有異動的檔案、行、值 &amp;hellip;&lt;br>
+有時候其實只是想找出有異動的檔案&lt;br>
+可以使用 &lt;code>--name-only&lt;/code>&lt;/p>
+&lt;h2 id="main">main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff --name-only &amp;lt;commit_id&amp;gt; &amp;lt;commit_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff --name-only 3b7760a 43be138
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>將版本 &lt;code>3b7760a&lt;/code> 及 版本 &lt;code>43be138&lt;/code> 有異動的檔案，列出來&lt;/p>
+&lt;p>&lt;img src="../../images/git-guide/diff-name-only-example.png"
+loading="lazy"
+>&lt;/p></description></item><item><title>Git 刪除分支</title><link>https://www.chihyu.me/2022/06/git-guide-delete-branch/</link><pubDate>Sat, 18 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-guide-delete-branch/</guid><description>&lt;img src="https://www.chihyu.me/images/git-guide/banner.jpg" alt="Featured image of post Git 刪除分支" />&lt;h2 id="main">Main&lt;/h2>
+&lt;h3 id="刪除遠端分支">刪除遠端分支&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git push origin :&amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="刪除本地分支">刪除本地分支&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git branch -d &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">Example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 刪除遠端分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push origin :fix-order
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 刪除本地分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git branch -d fix-order
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 開新分支</title><link>https://www.chihyu.me/2022/06/git-guide-create-new-branch/</link><pubDate>Wed, 15 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-guide-create-new-branch/</guid><description>&lt;img src="https://www.chihyu.me/images/git-guide/banner.jpg" alt="Featured image of post Git 開新分支" />&lt;h2 id="intro">Intro&lt;/h2>
+&lt;p>很多專案常需要開立新分支，避免大家功能打架或有些功能可能要先上線 &amp;hellip; 等等問題&lt;br>
+如果都使用同一個分支，就會很麻煩&lt;/p>
+&lt;p>當然每個團隊，都有習慣的 git workflow，
+覺得只要有效提升專案效率、協助分工，都是好方法&lt;/p>
+&lt;h2 id="main">Main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># -b create and checkout a new branch&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout -b &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>&lt;code>git checkout&lt;/code> 同時也是切換分支的方法&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="example">Example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 在 master 分支，開立新分支 &amp;#34;develop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 下這指令就會開立分支，同時切換過去那個分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout -b develop
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 在 develop 分支切換回 master 分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout master
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 如何更新程式至遠端</title><link>https://www.chihyu.me/2022/06/git-guide-push-to-origin/</link><pubDate>Sat, 11 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-guide-push-to-origin/</guid><description>&lt;img src="https://www.chihyu.me/images/git-guide/banner.jpg" alt="Featured image of post Git 如何更新程式至遠端" />&lt;h2 id="main">Main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#1 檢查目前異動狀態&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#2 將檔案新增上去索引&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git add .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#3 再檢查一次異動狀態&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#4 commit 上去 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -m &lt;span class="s1">&amp;#39;說明 xxxx&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#5 最後 push 上去&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push origin &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>
