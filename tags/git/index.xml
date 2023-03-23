@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>git on 志宇日常</title><link>https://www.chihyu.me/tags/git/</link><description>Recent content in git on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 21 Mar 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/tags/git/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 git rebase -i 改寫歷史，給我一個整齊的分支線！</title><link>https://www.chihyu.me/2023/03/git-cli-rebase-interactive/</link><pubDate>Tue, 21 Mar 2023 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2023/03/git-cli-rebase-interactive/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post 利用 git rebase -i 改寫歷史，給我一個整齊的分支線！" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>在開始一個功能時，可能會在主線(&lt;code>master&lt;/code>) 開出新的分支(&lt;code>feature-x&lt;/code>) 出去進行，&lt;br>
+我們在支線(&lt;code>feature-x&lt;/code>) 可能 commit 了好多次，&lt;br>
+但是希望有一天併回去主線(&lt;code>master&lt;/code>)的時候可以只留下一個主要功能的 commit，&lt;br>
+避免分支看起來非常雜亂&lt;/p>
+&lt;h3 id="語法使用">語法使用&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">rebase -i &amp;lt;commit-id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>commit-id 放你要要改寫的前一個點&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="直接上實例可能會比較了解">直接上實例可能會比較了解&lt;/h2>
+&lt;p>如圖可以看到這是我們目前分支狀況&lt;br>
+&lt;img src="../../images/git-cli/git-rebase-i-origin.png"
+loading="lazy"
+>
+(圖片的分支與平常使用的方向相反，愈下面愈新)&lt;/p>
+&lt;p>我們從 C2 切了一個新分支出來 &lt;code>feature-x&lt;/code>， 我要把 C3,C4,C5 合併回去 &lt;code>master&lt;/code>&lt;br>
+但是我希望合併回去時只有一個 commit，&lt;br>
+我需要在&lt;code>feature-x&lt;/code> 分支下&lt;/p>
+&lt;h3 id="step-1下指令-我要修改他們">step 1：下指令 我要修改他們！&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git checkout feature-x
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git rebase -i C2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>⭐ 這邊很重要 ！ 我們需要取用將他們合起來的前一個點 &lt;code>C2&lt;/code> 當起點&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="step-2-要怎麼修改他們呢">step 2： 要怎麼修改他們呢&lt;/h3>
+&lt;p>執行完後，會出現一個編輯介面：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">pick C3 feature - commit message aaaaaaa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pick C4 fix-abc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pick C5 fix-def
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Rebase C2..C5 onto C2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Commands:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># p, pick = use commit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># r, reword = use commit, but edit the commit message&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># e, edit = use commit, but stop for amending&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># s, squash = use commit, but meld into previous commit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># f, fixup = like &amp;#34;squash&amp;#34;, but discard this commit&amp;#39;s log message&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># x, exec = run command (the rest of the line) using shell&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># These lines can be re-ordered; they are executed from top to bottom.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># If you remove a line here THAT COMMIT WILL BE LOST.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># However, if you remove everything, the rebase will be aborted.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Note that empty commits are commented out&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>上面 pick 是你目前 commit 區間 C3,C4,C5&lt;/p>
+&lt;blockquote>
+&lt;p>這邊 commit 順序與我們平常看的相反&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>pick: 就是會保留這個 commit&lt;/li>
+&lt;li>fixup: 就是會拿掉這個 commit&lt;/li>
+&lt;/ul>
+&lt;p>這兩個最常用，因為其他我也沒有使用過 🤣🤣🤣&lt;/p>
+&lt;p>因為我們只要保留一個 &lt;code>C3&lt;/code>&lt;br>
+所以我們將 C4,C5 的前面 &lt;code>pick&lt;/code> 改成 &lt;code>f&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">pick C3 feature - commit message aaaaaaa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">f C4 fix-abc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">f C5 fix-def
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然後&lt;br>
+儲存 ！&lt;/p>
+&lt;h3 id="step3-完成了">step3: 完成了&lt;/h3>
+&lt;p>完成後，分支就會長這樣&lt;br>
+&lt;img src="../../images/git-cli/git-rebase-i-modify.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>如此一來將 &lt;code>feature-x&lt;/code> 合併回去 &lt;code>master&lt;/code> 時，就會只看到一個 commit&lt;/p>
+&lt;h3 id="step4-合併回去-master">step4: 合併回去 master&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git checkout master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge feature-x --no-ff
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="../../images/git-cli/git-rebase-i-after-merge-master.png"
+loading="lazy"
+>&lt;/p></description></item><item><title>Git rebase 變更基準點</title><link>https://www.chihyu.me/2022/09/git-cli-rebase/</link><pubDate>Tue, 27 Sep 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/09/git-cli-rebase/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git rebase 變更基準點" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>當我們的分支離主要分支愈來愈遠的時候&amp;hellip;
+除了使用 &lt;code>merge&lt;/code> 回自己的分支外，&lt;br>
+還有另一個選擇就是 &lt;code>rebase&lt;/code>&lt;/p>
+&lt;h2 id="rebase-是什麼呢">rebase 是什麼呢？&lt;/h2>
+&lt;p>一張圖片表示他，如下&lt;br>
+&lt;img src="../../images/git-cli/rebase-guide.svg"
+loading="lazy"
+>
+(圖片資料參考於 &lt;a class="link" href="https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase" target="_blank" rel="noopener"
+>頁面&lt;/a>)&lt;/p>
+&lt;p>簡單來說呢，就是將原本 &lt;code>checkout&lt;/code> 出來的點，變更為目標分支最新的點，&lt;br>
+只不過 &lt;code>rebase&lt;/code> 後，因為原本自己的遠端分支沒有跟上，&lt;br>
+而且因為變更基準的關係，會沒有辦法直接 &lt;code>push&lt;/code>上去，
+需要 &lt;code>push -f&lt;/code>強制將分支內容推上去，&lt;/p>
+&lt;p>當然可以不用擔心會不會蓋到其他人的程式，
+因為當你 &lt;code>rebase&lt;/code> 後，有衝突妳就需要當下解了，&lt;/p>
+&lt;h2 id="example">Example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git rebase master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push origin fix-users -f
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 匯出異動的檔案</title><link>https://www.chihyu.me/2022/07/git-cli-archive-export-files-with-diff/</link><pubDate>Sat, 02 Jul 2022 14:11:17 +0800</pubDate><guid>https://www.chihyu.me/2022/07/git-cli-archive-export-files-with-diff/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git 匯出異動的檔案" />&lt;h2 id="main">Main&lt;/h2>
+&lt;p>比對兩個版本，並將有異動的檔案匯出到指定目錄&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git archive --output&lt;span class="o">=&lt;/span>&amp;lt;/folder/filename&amp;gt;.tar HEAD &lt;span class="k">$(&lt;/span>git diff --name-only &amp;lt;commit_id&amp;gt; &amp;lt;commit_id&amp;gt;&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">Example&lt;/h2>
+&lt;p>將版本 &lt;code>1b7760a&lt;/code> 及 版本 &lt;code>d3be133&lt;/code> 有異動的檔案，匯出到 &lt;code>/home/chihyu/Backup/&lt;/code> 檔名 &lt;code>test.tar&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git archive --output&lt;span class="o">=&lt;/span>/home/chihyu/Backup/test.tar HEAD &lt;span class="k">$(&lt;/span>git diff --name-only 1b7760a d3be133&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 比對只顯示檔案列表</title><link>https://www.chihyu.me/2022/07/git-cli-diff-name-only/</link><pubDate>Fri, 01 Jul 2022 14:20:46 +0800</pubDate><guid>https://www.chihyu.me/2022/07/git-cli-diff-name-only/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git 比對只顯示檔案列表" />&lt;h2 id="intro">intro&lt;/h2>
+&lt;p>一般我們下 &lt;code>git diff&lt;/code> 的時候，就會顯示所有異動的檔案、行、值 &amp;hellip;&lt;br>
+有時候其實只是想找出有異動的檔案&lt;br>
+可以使用 &lt;code>--name-only&lt;/code>&lt;/p>
+&lt;h2 id="main">main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff --name-only &amp;lt;commit_id&amp;gt; &amp;lt;commit_id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git diff --name-only 3b7760a 43be138
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>將版本 &lt;code>3b7760a&lt;/code> 及 版本 &lt;code>43be138&lt;/code> 有異動的檔案，列出來&lt;/p>
+&lt;p>&lt;img src="../../images/git-cli/diff-name-only-example.png"
+loading="lazy"
+>&lt;/p></description></item><item><title>Git 刪除分支</title><link>https://www.chihyu.me/2022/06/git-cli-delete-branch/</link><pubDate>Sat, 18 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-cli-delete-branch/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git 刪除分支" />&lt;h2 id="main">Main&lt;/h2>
+&lt;h3 id="刪除遠端分支">刪除遠端分支&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git push origin :&amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="刪除本地分支">刪除本地分支&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git branch -d &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">Example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 刪除遠端分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push origin :fix-order
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 刪除本地分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git branch -d fix-order
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 開新分支</title><link>https://www.chihyu.me/2022/06/git-cli-create-new-branch/</link><pubDate>Wed, 15 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-cli-create-new-branch/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git 開新分支" />&lt;h2 id="intro">Intro&lt;/h2>
+&lt;p>很多專案常需要開立新分支，避免大家功能打架或有些功能可能要先上線 &amp;hellip; 等等問題&lt;br>
+如果都使用同一個分支，就會很麻煩&lt;/p>
+&lt;p>當然每個團隊，都有習慣的 git workflow，
+覺得只要有效提升專案效率、協助分工，都是好方法&lt;/p>
+&lt;h2 id="main">Main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># -b create and checkout a new branch&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout -b &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>&lt;code>git checkout&lt;/code> 同時也是切換分支的方法&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="example">Example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 在 master 分支，開立新分支 &amp;#34;develop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 下這指令就會開立分支，同時切換過去那個分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout -b develop
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 在 develop 分支切換回 master 分支&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git checkout master
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Git 如何更新程式至遠端</title><link>https://www.chihyu.me/2022/06/git-cli-push-to-origin/</link><pubDate>Sat, 11 Jun 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/git-cli-push-to-origin/</guid><description>&lt;img src="https://www.chihyu.me/images/git-cli/banner.jpg" alt="Featured image of post Git 如何更新程式至遠端" />&lt;h2 id="main">Main&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#1 檢查目前異動狀態&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#2 將檔案新增上去索引&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git add .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#3 再檢查一次異動狀態&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#4 commit 上去 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -m &lt;span class="s1">&amp;#39;說明 xxxx&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#5 最後 push 上去&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push origin &amp;lt;branch&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>
