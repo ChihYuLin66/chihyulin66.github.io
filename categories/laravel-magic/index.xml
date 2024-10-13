@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Laravel Magic on 志宇日常</title><link>https://www.chihyu.me/categories/laravel-magic/</link><description>Recent content in Laravel Magic on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 23 Dec 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/categories/laravel-magic/index.xml" rel="self" type="application/rss+xml"/><item><title>Laravel 使用 axios 匯出 Excel</title><link>https://www.chihyu.me/2022/12/laravel-magic-use-axios-export-excel/</link><pubDate>Fri, 23 Dec 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/12/laravel-magic-use-axios-export-excel/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner.png" alt="Featured image of post Laravel 使用 axios 匯出 Excel" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>說到 Laravel 匯出 excel 相信大家肯定對這套件不陌生&lt;br>
+&lt;a class="link" href="https://docs.laravel-excel.com/3.1/getting-started/" target="_blank" rel="noopener"
+>套件連結&lt;/a>&lt;/p>
+&lt;p>不過文件內沒有提到如何透過 api 的方式下載檔案，&lt;br>
+我自己也摸索好久，終於找到方法了&lt;br>
+想說來跟大家分享一下&lt;/p>
+&lt;h2 id="主要">主要&lt;/h2>
+&lt;h3 id="環境介紹">環境介紹&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>maatwebsite/excel&lt;/code> 版本 &lt;code>3.1&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="前端">前端&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span> &lt;span class="na">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 檔案名稱
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nx">fileName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;xxx.xlsx&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// api 路徑
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nx">url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// 資料
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nx">data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">axios&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">url&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">data&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">responseType&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;arraybuffer&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">headers&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Content-Type&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;application/json&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}).&lt;/span>&lt;span class="nx">then&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="nx">response&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">URL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">createObjectURL&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="nx">Blob&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="nx">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">data&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// xlsx
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">type&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// xls
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="c1">// type: &amp;#39;application/vnd.ms-excel&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="p">}));&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">const&lt;/span> &lt;span class="nx">link&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">createElement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;a&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">link&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">href&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">url&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">link&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">setAttribute&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;download&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">fileName&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">document&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">body&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">appendChild&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">link&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">link&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="k">catch&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="nx">error&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">log&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">error&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>檔案類別可以參考： &lt;a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types" target="_blank" rel="noopener"
+>MIME Types&lt;/a>&lt;/p>
+&lt;h3 id="api-的-controller">API 的 controller&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Illuminate\Http\Request&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">App\Exports\OrderExport&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Maatwebsite\Excel\Facades\Excel&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">OrderExportController&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="nx">Controller&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="sd">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> * 匯出
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="sd"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="k">function&lt;/span> &lt;span class="nf">export&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">Request&lt;/span> &lt;span class="nv">$request&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="nx">Excel&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">download&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="nx">OrderExport&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$orders&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;訂單.xlsx&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這邊就不特別解釋 &lt;code>Excel::download&lt;/code> 的使用方法了&lt;br>
+之後再跟大家分享&lt;/p></description></item><item><title>Laravel Eloquent Or Query Builder</title><link>https://www.chihyu.me/2022/09/laravel-magic-eloquent-or-query-builder/</link><pubDate>Wed, 21 Sep 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/09/laravel-magic-eloquent-or-query-builder/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-eloquent-or-query-builder.png" alt="Featured image of post Laravel Eloquent Or Query Builder" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;h3 id="使用的版本">使用的版本&lt;/h3>
+&lt;p>Laravel: 7&lt;br>
+php: 7.3&lt;/p>
+&lt;p>我們都知道在 Laravel 裡面取得資料庫資料可以使用 &lt;code>Eloquent ORM&lt;/code> 、&lt;code>Query Builder&lt;/code>，&lt;br>
+今天就來聊聊兩者到底差在哪裡巴 ~&lt;/p>
+&lt;h2 id="主要內容">主要內容&lt;/h2>
+&lt;h3 id="eloquent-orm">Eloquent ORM&lt;/h3>
+&lt;p>透過物件的方式調用資料，&lt;br>
+可參考 &lt;a class="link" href="https://laravel.com/docs/7.x/eloquent" target="_blank" rel="noopener"
+>文件&lt;/a>，相關語法如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">App\Models\User&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Jason&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">first&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="query-builder">Query Builder&lt;/h3>
+&lt;p>直接對資料表進行調用，&lt;br>
+可先參考 &lt;a class="link" href="https://laravel.com/docs/7.x/queries" target="_blank" rel="noopener"
+>文件&lt;/a>，相關語法如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Illuminate\Support\Facades\DB&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">DB&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">table&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;users&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Jason&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">first&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>以上兩段程式碼，都是在取 name = Jason 的人，取出來的值也能直接使用&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="速度比較">速度比較&lt;/h3>
+&lt;p>因為我這段SQL比較簡單，所以很難看出速度哪個比較快&lt;br>
+於是我網路上找了一下資源，如下所示&lt;br>
+&lt;img src="../../images/laravel-magic/eloquent-or-query-builder/speed.jpeg"
+loading="lazy"
+>&lt;br>
+(圖片資料參考於 &lt;a class="link" href="https://dev.to/hesamzakerirad/laravel-orm-vs-query-builder-vs-sql-speed-test-4knf" target="_blank" rel="noopener"
+>頁面&lt;/a>)&lt;/p>
+&lt;p>&lt;code>Query Builder&lt;/code> 調用的速度上比 &lt;code>Eloquent&lt;/code> 還要快很多 (將近一倍)&lt;br>
+這樣你說 &lt;code>Query Builder&lt;/code> 比較快，執行上語法也差異不大，為何還要選擇使用 &lt;code>Eloquent&lt;/code> 呢？&lt;/p>
+&lt;h3 id="eloquent-優勢在哪裡">Eloquent 優勢在哪裡？&lt;/h3>
+&lt;ol>
+&lt;li>增加程式碼閱讀&lt;/li>
+&lt;li>relationship 關聯其他 Model&lt;/li>
+&lt;li>Accessors&lt;/li>
+&lt;li>Soft Deletes&lt;/li>
+&lt;li>Scopes&lt;/li>
+&lt;li>Mutators &amp;amp; Casting
+&amp;hellip;&amp;hellip; 等等功能&lt;/li>
+&lt;/ol>
+&lt;p>雖然 &lt;code>Eloquent&lt;/code> 的效能比較不好，但因著這些強大功能覺得也是種取捨&lt;/p>
+&lt;h2 id="結論">結論&lt;/h2>
+&lt;p>我大部分的功能都會使用 &lt;code>Eloquent&lt;/code> 與 &lt;code>Collection&lt;/code> 達成一個組合技，規劃並完成，&lt;br>
+不過若是一次性或不太會異動的功能，感覺就可以考慮看看 &lt;code>Query Builder&lt;/code>，&lt;br>
+雖然我還是都使用 &lt;code>Eloquent&lt;/code> 畢竟遇到後續的需求修改，會相對提升可塑性(好讀、好改)&lt;/p></description></item><item><title>Laravel Eloquent 自定義資料表名稱(TableName)</title><link>https://www.chihyu.me/2022/08/laravel-magic-eloquent-eloquent-customize-table-name/</link><pubDate>Thu, 04 Aug 2022 02:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/08/laravel-magic-eloquent-eloquent-customize-table-name/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-eloquent-customize-table-name.png" alt="Featured image of post Laravel Eloquent 自定義資料表名稱(TableName)" />&lt;h3 id="intro">intro&lt;/h3>
+&lt;p>可參考 &lt;a class="link" href="https://laravel.com/docs/9.x/eloquent#table-names" title="eloquent customize table name documentaion"
+target="_blank" rel="noopener"
+>文件&lt;/a>&lt;/p>
+&lt;h3 id="main">main&lt;/h3>
+&lt;p>Laravel 預設的資料表名稱(TableName)都是 Model 名稱的複數，&lt;/p>
+&lt;p>我習慣建立 &lt;code>make:model&lt;/code> 時加上 &lt;code>-m&lt;/code>，&lt;br>
+這樣建立 model時，也建立 migration, 資料表名稱(TableName) 也會幫我設定好,&lt;br>
+EX:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">php artisan make:model Member -m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>但如果我需要獨立開的話，或table不是來自migration，&lt;br>
+我可以建立一個 Model,&lt;br>
+並直接定義他要使用的 Table，&lt;br>
+如此一來，&lt;br>
+這個Table就可以使用 Eloquent 的強大功能 ！&lt;/p>
+&lt;h3 id="範例">範例&lt;/h3>
+&lt;p>檔案: app\Models\Member.php&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Member&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="nx">Model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">protected&lt;/span> &lt;span class="nv">$table&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;member_list&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Laravel 用戶角色/權限輕鬆設定的套件</title><link>https://www.chihyu.me/2022/07/laravel-magic-packages-spatie-laravel-permission/</link><pubDate>Sat, 30 Jul 2022 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/07/laravel-magic-packages-spatie-laravel-permission/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-packages-spatie-laravel-permission.png" alt="Featured image of post Laravel 用戶角色/權限輕鬆設定的套件" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;h3 id="我使用的版本">我使用的版本&lt;/h3>
+&lt;p>Laravel: 7&lt;br>
+php: 7.3&lt;br>
+spatie/laravel-permission: 3&lt;/p>
+&lt;p>可先參考 &lt;a class="link" href="https://spatie.be/docs/laravel-permission/v3/introduction" title="documentation"
+target="_blank" rel="noopener"
+>文件&lt;/a>&lt;/p>
+&lt;h3 id="介紹">介紹&lt;/h3>
+&lt;p>每個網站開發往往都需要使用者的權限設定&lt;br>
+這些功能其實就那些 ~&lt;/p>
+&lt;ul>
+&lt;li>哪些角色可以使用?&lt;/li>
+&lt;li>哪些權限可以使用?&lt;/li>
+&lt;/ul>
+&lt;p>spatie/laravel-permission 主要就是要解決這個問題
+每個使用者可以設定多角色/多權限 相當方便&lt;/p>
+&lt;h2 id="快速上手">快速上手&lt;/h2>
+&lt;h3 id="安裝及初始化">安裝及初始化&lt;/h3>
+&lt;ul>
+&lt;li>在終端機執行安裝&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer require spatie/laravel-permission
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>開啟專案檔案 &lt;code>config/app.php&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="s1">&amp;#39;providers&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="nx">Spatie\Permission\PermissionServiceProvider&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>與終端機執行，引入套件的檔案
+裡面含有 migration、config檔(&lt;code>config/permission.php&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">php artisan vendor:publish --provider&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Spatie\Permission\PermissionServiceProvider&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>再於終端機執行，建立資料表&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">php artisan migrate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>在需要使用權限的Model 引用&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Illuminate\Foundation\Auth\User&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nx">Authenticatable&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Spatie\Permission\Traits\HasRoles&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// ------ 加這個 Use Class**
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">User&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="nx">Authenticatable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">use&lt;/span> &lt;span class="nx">HasRoles&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// ------ 加這個**
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="建立角色及權限">建立角色及權限&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Spatie\Permission\Models\Role&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">use&lt;/span> &lt;span class="nx">Spatie\Permission\Models\Permission&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$role&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Role&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">create&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s1">&amp;#39;writer&amp;#39;&lt;/span>&lt;span class="p">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$permission&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Permission&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">create&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="s1">&amp;#39;edit articles&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="將角色設定某些權限">將角色設定某些權限&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$role&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Role&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$role&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">permissions&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">sync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$permissions_id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="給使用者角色與權限">給使用者角色與權限&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 給角色
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$role&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Role&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$role_id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">assignRole&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$role&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 給權限
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$permission&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Permission&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$permission_id&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">givePermissionTo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$permission&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="取得使用者角色或權限">取得使用者角色或權限&lt;/h3>
+&lt;ul>
+&lt;li>取得使用者角色&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$user&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$roles&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">roles&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>取得使用者權限&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$user&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 方法一
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">getPermissionsViaRoles&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 方法二
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">getAllPermissions&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="其他">其他&lt;/h3>
+&lt;p>更多資訊可以參閱他們官方的文件&lt;br>
+可先參考 &lt;a class="link" href="https://spatie.be/docs/laravel-permission/v3/basic-usage/basic-usage" title="basic usage"
+target="_blank" rel="noopener"
+>文件&lt;/a>&lt;/p>
+&lt;h2 id="結語">結語&lt;/h2>
+&lt;p>這個套件真的滿好用的&lt;br>
+且使用者也多，萬一遇到問題 Stackoverflow 也很多解法&lt;br>
+真心推薦給大家 😄&lt;/p></description></item><item><title>Laravel 取得區間的SQL</title><link>https://www.chihyu.me/2022/07/laravel-magic-db-query-log/</link><pubDate>Sat, 16 Jul 2022 02:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/07/laravel-magic-db-query-log/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-db-query-log.png" alt="Featured image of post Laravel 取得區間的SQL" />&lt;h3 id="main">main&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">\DB&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">enableQueryLog&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="c1">// Enable query log
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// ... query ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">dd&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">\DB&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">getQueryLog&lt;/span>&lt;span class="p">());&lt;/span> &lt;span class="c1">// Show results of log
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="example">example&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">\DB&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">enableQueryLog&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="c1">// Enable query log
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nv">$product&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">Product&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">dd&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">\DB&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">getQueryLog&lt;/span>&lt;span class="p">());&lt;/span> &lt;span class="c1">// Show results of log
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="../../images/laravel-magic/query-log-example-01.jpeg"
+loading="lazy"
+>&lt;/p></description></item><item><title>Laravel Eloquent 自定義主鍵(primary-key)</title><link>https://www.chihyu.me/2022/07/laravel-magic-eloquent-customize-primary-key/</link><pubDate>Sun, 10 Jul 2022 02:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/07/laravel-magic-eloquent-customize-primary-key/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-eloquent-customize-primary-key.png" alt="Featured image of post Laravel Eloquent 自定義主鍵(primary-key)" />&lt;h3 id="intro">intro&lt;/h3>
+&lt;p>可參考 &lt;a class="link" href="https://laravel.com/docs/9.x/eloquent#primary-keys" title="eloquent customize primary key documentaion"
+target="_blank" rel="noopener"
+>文件&lt;/a>&lt;/p>
+&lt;h3 id="main">main&lt;/h3>
+&lt;p>Laravel 預設的 pKey 是 &lt;code>id&lt;/code>&lt;br>
+在 Model 裡加入 &lt;code>$primaryKey&lt;/code> 參數，就可以使用這個自定義 pKey，&lt;br>
+如此一來後續的關聯就不用每次都定義關聯的 key&lt;/p>
+&lt;p>檔案: app\Models\Product.php&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Product&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="nx">Model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">protected&lt;/span> &lt;span class="nv">$primaryKey&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;product_id&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Laravel 大量寫入的好幫手 chunk</title><link>https://www.chihyu.me/2022/06/laravel-magic-chunk/</link><pubDate>Sat, 25 Jun 2022 02:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/06/laravel-magic-chunk/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner-chunk.png" alt="Featured image of post Laravel 大量寫入的好幫手 chunk" />&lt;h2 id="what-is-chunk">What is chunk&lt;/h2>
+&lt;p>&lt;img src="../../images/laravel-magic/chunk/what-is-chunk-01.jpeg"
+loading="lazy"
+>&lt;/p>
+&lt;p>可以將 chunk 理解成&amp;hellip;&lt;br>
+我將一大組資料分「塊」處理，&lt;br>
+而不是逐筆處理&lt;/p>
+&lt;h2 id="why-chunk">Why chunk&lt;/h2>
+&lt;p>假設每筆就要執行一段SQL，&lt;br>
+這樣我 5000筆資料，就要執行 5000次&lt;br>
+如果我將這 5000 筆，每 500 分成一塊，我只要執行 10 次。&lt;br>
+如此一來可以有效縮減執行時間也降低了DB的負擔。&lt;/p>
+&lt;h2 id="how-to-chunk">How to chunk&lt;/h2>
+&lt;p>&lt;strong>Laravel chunk&lt;/strong> 分成三種&lt;/p>
+&lt;ol>
+&lt;li>Query Builder chunk&lt;/li>
+&lt;li>Eloquent chunk&lt;/li>
+&lt;li>Collection chunk&lt;/li>
+&lt;/ol>
+&lt;h3 id="假設情境">假設情境&lt;/h3>
+&lt;p>當我有好幾萬的會員，每年要贈送 100點的點數給他們，&lt;br>
+我們建立了一個排程，每年1月1日贈送，&lt;br>
+隨著會員數量的增加，執行時間會愈來愈久，&lt;br>
+我們必須著手優化這段排程 &amp;hellip;&lt;/p>
+&lt;h3 id="original-no-chunk">Original (No chunk)&lt;/h3>
+&lt;p>當我們沒有chunk通常都是逐筆寫入&lt;br>
+這邊用 &lt;code>each&lt;/code> 作為範例&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">query&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">each&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">function&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$user&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">Point&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">insert&lt;/span>&lt;span class="p">([&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;amount&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;user_id&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">id&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;created_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;updated_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="query-builder-chunk">Query Builder chunk&lt;/h3>
+&lt;p>可參考 &lt;a class="link" href="https://laravel.com/docs/9.x/queries#chunking-results" title="Query Builder chunk documentaion"
+target="_blank" rel="noopener"
+>文件&lt;/a>&lt;/p>
+&lt;p>使用方式和 &lt;strong>Eloquent chunk&lt;/strong> 相同&lt;br>
+所以我會在下方 &lt;strong>Eloquent chunk&lt;/strong> 共同解釋&lt;/p>
+&lt;h3 id="eloquent-chunk">Eloquent chunk&lt;/h3>
+&lt;p>可參考 &lt;a class="link" href="https://laravel.com/docs/9.x/eloquent#chunking-results" title="Eloquent chunk documentaion"
+target="_blank" rel="noopener"
+>官方文件&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">query&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">chunk&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">function&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$users&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">foreach&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nv">$users&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nv">$user&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$data&lt;/span>&lt;span class="p">[]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;amount&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;user_id&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">id&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;created_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;updated_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">Point&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">insert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$data&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>運作的方式是用 SQL ，&lt;br>
+使用 &lt;code>limit 500 offset 0&lt;/code> 、 &lt;code>limit 500 offset 500&lt;/code> &amp;hellip;.. 直到分完全部&lt;br>
+在 query 當下就分塊。&lt;/p>
+&lt;h3 id="collection-chunk">Collection chunk&lt;/h3>
+&lt;p>可參考 &lt;a class="link" href="https://laravel.com/docs/9.x/collections#method-chunk" title="Collection chunk documentaion"
+target="_blank" rel="noopener"
+>官方文件&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$chunks&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">User&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">query&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">map&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">function&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$user&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;amount&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;user_id&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nv">$user&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">id&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;created_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;updated_at&amp;#39;&lt;/span> &lt;span class="o">=&amp;gt;&lt;/span> &lt;span class="nx">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toDateTimeString&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">chunk&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">toArray&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">foreach&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nv">$chunks&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nv">$chunk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">Point&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="na">insert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$chunk&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>運作的方式是先都 query出來，再用 php 整理的，&lt;/p>
+&lt;p>如圖所示&lt;br>
+&lt;img src="../../images/laravel-magic/chunk/collection-chunk-demo.jpeg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="比較">比較&lt;/h2>
+&lt;p>老實說使用哪一個其實感覺不出來，&lt;br>
+因為執行效率差不多，&lt;br>
+Eloquent 吃DB資源，Collection 吃記憶體資源，&lt;/p>
+&lt;p>&lt;strong>Collection chunk&lt;/strong> 遇過直接網頁執行，記憶體吃掛了的問題，&lt;/p>
+&lt;p>最後我還是選擇了 &lt;strong>Eloquent chunk&lt;/strong>&lt;br>
+雖然 執行的SQL多了一些 query，但不會吃你記憶體，&lt;/p>
+&lt;p>也是看大家取捨拉 ~&lt;/p>
+&lt;p>這是我執行3千筆的資訊&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align: center">資料量&lt;/th>
+&lt;th style="text-align: left">運用&lt;/th>
+&lt;th style="text-align: right">花費時間&lt;/th>
+&lt;th style="text-align: right">記憶體&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align: center">3000筆&lt;/td>
+&lt;td style="text-align: left">Original (No chunk)&lt;/td>
+&lt;td style="text-align: right">6.6s&lt;/td>
+&lt;td style="text-align: right">142MB&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: center">3000筆&lt;/td>
+&lt;td style="text-align: left">Eloquent chunk&lt;/td>
+&lt;td style="text-align: right">1.52s&lt;/td>
+&lt;td style="text-align: right">33MB&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align: center">3000筆&lt;/td>
+&lt;td style="text-align: left">Collection chunk&lt;/td>
+&lt;td style="text-align: right">1.49s&lt;/td>
+&lt;td style="text-align: right">141MB&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="題外話">題外話&lt;/h2>
+&lt;p>這裡的寫入使用了 &lt;code>Point::insert&lt;/code> 為何不使用 &lt;code>Point::create&lt;/code> ?&lt;br>
+是為了批次寫入及效率的問題考量，&lt;br>
+之後再來聊聊 Laravel insert &amp;amp; Laravel create 差異吧&lt;/p></description></item><item><title>Laravel Magic 系列 - 第1篇</title><link>https://www.chihyu.me/2022/06/laravel-magic-intro/</link><pubDate>Thu, 23 Jun 2022 23:08:15 +0800</pubDate><guid>https://www.chihyu.me/2022/06/laravel-magic-intro/</guid><description>&lt;img src="https://www.chihyu.me/images/laravel-magic/banner.png" alt="Featured image of post Laravel Magic 系列 - 第1篇" />&lt;p>&lt;strong>Laravel Magic&lt;/strong> 系列為我使用 Laravel 的時方便的功能、推荐的撇布等等 &amp;hellip;&lt;/p>
+&lt;p>可以當作 Laravel 的雜記 ~&lt;/p>
+&lt;p>我認為 Laravel 提供很多神奇方法，&lt;br>
+使用起來就像是魔術般的美妙&lt;br>
+故以此命名。👍👍👍&lt;/p></description></item></channel></rss>

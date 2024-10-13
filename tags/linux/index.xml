@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 志宇日常</title><link>https://www.chihyu.me/tags/linux/</link><description>Recent content in Linux on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 08 Dec 2022 14:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>關閉 Linux 滑鼠滾輪鍵貼上的方法</title><link>https://www.chihyu.me/2022/12/linux-disable-mouse-middle-click-paste/</link><pubDate>Thu, 08 Dec 2022 14:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/12/linux-disable-mouse-middle-click-paste/</guid><description>&lt;img src="https://www.chihyu.me/images/linux/banner.jpg" alt="Featured image of post 關閉 Linux 滑鼠滾輪鍵貼上的方法" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>不曉得大家有沒有像我有一樣的困擾&lt;br>
+我平常開方都是使用 ubuntu&lt;br>
+不過我滑鼠在滾動的時候，有時候只要按到就會直接貼上我剛剛選取的內容&lt;/p>
+&lt;p>可能有些人會覺得便利，
+但我覺得很困擾&lt;br>
+實在用不習慣這個操作 哈哈哈&lt;/p>
+&lt;p>於是我去網路上找了解法&lt;br>
+照著做就能用&lt;/p>
+&lt;p>來源: &lt;a class="link" href="https://gist.github.com/sam0x17/f1d89df55778e4317d8974623a62e8c6" target="_blank" rel="noopener"
+>資源&lt;/a>&lt;/p>
+&lt;h2 id="操作說明">操作說明&lt;/h2>
+&lt;h3 id="安裝套件">安裝套件&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt-get install xbindkeys xsel xdotool
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="新增-xbindkeysrc-檔">新增 &lt;code>.xbindkeysrc&lt;/code> 檔&lt;/h3>
+&lt;p>在 &lt;code>~/&lt;/code> 路徑底下新增檔案 &lt;code>.xbindkeysrc&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> ~
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">touch .xbindkeysrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="新增-xbindkey-設定檔">新增 &lt;code>xbindkey&lt;/code> 設定檔&lt;/h3>
+&lt;p>提供兩個方法可以寫入&lt;/p>
+&lt;p>方法一：在 Terminal 下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">echo&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;echo -n | xsel -n -i; pkill xbindkeys; xdotool click 2; xbindkeys&amp;#34; &lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1"> b:2 + Release&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">xbindkeysrc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者 ~
+方法二：開啟檔案貼上
+檔案: &lt;code>~/.xbindkeysrc&lt;/code> 寫入內容:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;echo -n | xsel -n -i; pkill xbindkeys; xdotool click 2; xbindkeys&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">b:2 + Release
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="設定加載-xbindkeys">設定加載 xbindkeys&lt;/h3>
+&lt;p>在 Terminal 下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">xbindkeys -p
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>搞定!&lt;/p></description></item></channel></rss>
