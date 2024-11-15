@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>容器化 on 志宇日常</title><link>https://www.chihyu.me/categories/%E5%AE%B9%E5%99%A8%E5%8C%96/</link><description>Recent content in 容器化 on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 14 Nov 2024 14:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/categories/%E5%AE%B9%E5%99%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>在 Ubuntu 上安裝 Docker</title><link>https://www.chihyu.me/2024/11/docker-installation-on-ubuntu/</link><pubDate>Thu, 14 Nov 2024 14:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/11/docker-installation-on-ubuntu/</guid><description>&lt;img src="https://www.chihyu.me/images/docker/banner.jpg" alt="Featured image of post 在 Ubuntu 上安裝 Docker" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>繼上一篇 &lt;a class="link" href="../../2024/11/docker-introduction" >Docker 基本介紹&lt;/a> 的說明，已經初步了解 docker，今天我們要在 Ubuntu 上安裝 docker&lt;/p>
+&lt;h2 id="在-ubuntu-上安裝-docker">在 Ubuntu 上安裝 Docker&lt;/h2>
+&lt;p>以下是逐步在 Ubuntu 上安裝 Docker 的指南：&lt;/p>
+&lt;h3 id="更新套件">更新套件&lt;/h3>
+&lt;p>在安裝 Docker 之前，建議先更新系統中的套件以確保版本是最新的。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt upgrade -y
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安裝必要的依賴套件">安裝必要的依賴套件&lt;/h3>
+&lt;p>接著，安裝一些必要的前置套件。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="新增-docker-的軟體源及安裝-docker">新增 Docker 的軟體源及安裝 docker&lt;/h3>
+&lt;p>添加 Docker 的 GPG 密鑰以及 Docker 軟體源到你的系統中。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">curl -fsSL https://download.docker.com/linux/ubuntu/gpg &lt;span class="p">|&lt;/span> sudo apt-key add -
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo add-apt-repository &lt;span class="s2">&amp;#34;deb [arch=amd64] https://download.docker.com/linux/ubuntu &lt;/span>&lt;span class="k">$(&lt;/span>lsb_release -cs&lt;span class="k">)&lt;/span>&lt;span class="s2"> stable&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt install docker-ce -y
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="驗證安裝">驗證安裝&lt;/h3>
+&lt;p>安裝完成後，可以用以下指令確認 Docker 是否正在運行：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl status docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>你應該會看到輸出顯示 Docker 處於「active (running)」狀態。&lt;/p>
+&lt;p>&lt;img src="../../images/docker/docker-status.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="設置開機啟動">設置開機啟動&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> docker
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="以非-root-用戶執行-docker">以非 root 用戶執行 Docker&lt;/h3>
+&lt;p>預設情況下，執行 Docker 指令需要使用 sudo 權限。如果希望用非 root 用戶執行 Docker，可以將當前用戶加入 docker 群組：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo usermod -aG docker &lt;span class="si">${&lt;/span>&lt;span class="nv">USER&lt;/span>&lt;span class="si">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="測試">測試&lt;/h3>
+&lt;h4 id="執行一個測試容器來確認-docker-是否正常運行">執行一個測試容器來確認 Docker 是否正常運行：&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run hello-world
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="執行-docker-ps-的確認">執行 &lt;code>docker ps&lt;/code> 的確認&lt;/h4>
+&lt;p>會看到這樣類似的內容:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">CONTAINER ID IMAGE COMMAND CREATED STATUS NAMES
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1a2b3c4d5e6f hello-world &amp;#34;/hello&amp;#34; 5 minutes ago Exited (0) 3 minutes ago amazing_brown
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Docker 基本介紹</title><link>https://www.chihyu.me/2024/11/docker-introduction/</link><pubDate>Tue, 12 Nov 2024 14:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/11/docker-introduction/</guid><description>&lt;img src="https://www.chihyu.me/images/docker/banner.jpg" alt="Featured image of post Docker 基本介紹" />&lt;h1 id="docker-是什麼">Docker 是什麼？&lt;/h1>
+&lt;p>Docker 是一個用於開發、部署和執行應用程式的平台，利用容器來提供一致的執行環境。以下是更詳細的介紹：&lt;/p>
+&lt;h2 id="1-容器-containers">1. 容器 (Containers)&lt;/h2>
+&lt;p>Docker 容器是輕量級、獨立執行的軟體包，包含了運行應用所需的所有內容，如程式碼、執行環境、系統工具、函式庫和設定檔。容器之間以及容器與主機系統是相互隔離的，確保應用程式能夠在不同環境中一致執行。&lt;/p>
+&lt;h2 id="2-一致性與可攜性-consistency-and-portability">2. 一致性與可攜性 (Consistency and Portability)&lt;/h2>
+&lt;p>容器封裝了所有的依賴和配置，使得應用程式可以在開發環境、測試環境或生產環境中保持一致的行為。&lt;/p>
+&lt;h2 id="3-映像檔與-docker-hub-images-and-docker-hub">3. 映像檔與 Docker Hub (Images and Docker Hub)&lt;/h2>
+&lt;p>Docker 使用映像檔作為容器的「藍圖」。映像檔通常基於其他映像檔進行自訂。Docker Hub 是一個公共的映像檔註冊庫，用戶可以在此上傳或下載映像檔，方便應用程式的分享與分發。&lt;/p>
+&lt;h2 id="4-docker-引擎-docker-engine">4. Docker 引擎 (Docker Engine)&lt;/h2>
+&lt;p>Docker 引擎是 Docker 的核心，負責在系統上管理容器的守護程序。用戶可以透過 Docker 的命令列介面 (CLI) 或 API 與引擎互動。&lt;/p>
+&lt;h2 id="5-devops-與-cicd-整合">5. DevOps 與 CI/CD 整合&lt;/h2>
+&lt;p>Docker 在 DevOps 社群中備受歡迎，因為它能簡化持續整合與持續部署 (CI/CD) 的流程，提升開發與部署的效率。&lt;/p>
+&lt;h3 id="延伸閱讀">延伸閱讀:&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../../2024/11/docker-installation-on-ubuntu" >在 Ubuntu 上安裝 Docker&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>
