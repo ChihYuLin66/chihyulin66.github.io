@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wsl2 on 志宇日常</title><link>https://www.chihyu.me/tags/wsl2/</link><description>Recent content in Wsl2 on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 28 Oct 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/tags/wsl2/index.xml" rel="self" type="application/rss+xml"/><item><title>讓 Windows 直接使用 Linux (二) - WSL2 複製術</title><link>https://www.chihyu.me/2024/10/windows-wsl2-export-and-import/</link><pubDate>Mon, 28 Oct 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/10/windows-wsl2-export-and-import/</guid><description>&lt;img src="https://www.chihyu.me/images/windows/wsl2-banner.png" alt="Featured image of post 讓 Windows 直接使用 Linux (二) - WSL2 複製術" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>繼上一篇 &lt;a class="link" href="../../2024/10/windows-wsl2-introduction" >讓 Windows 直接使用 Linux (一) - WSL2 安裝&lt;/a> 的說明，我們已經能順利在 windows 使用 Linux 了。&lt;/p>
+&lt;p>所以這篇我要來說明，如果複製多個 Linux 使用，各自的 Linux，都是獨立的機器。&lt;/p>
+&lt;h3 id="為什麼會需要複製呢-">為什麼會需要複製呢 ?&lt;/h3>
+&lt;p>以我的情境，一台空白的電腦一定需要安裝自己習慣使用的軟體，所以我會將第一台 Linux 安裝我要的軟體當作基底，然後複製出其他我平常要使用的，
+萬一有哪天要重新安裝的時候，就不用全部重來，只需要把我設定好的再複製出來一次即可，非常方便。&lt;/p>
+&lt;h2 id="如何複製">如何複製&lt;/h2>
+&lt;p>其實就是將我的容器匯出再匯入一個新的這樣，以下我會說明如何匯出及匯入。&lt;/p>
+&lt;h3 id="匯出">匯出&lt;/h3>
+&lt;p>開啟 Power Shell 並使用系統管理員。&lt;/p>
+&lt;h4 id="指令">指令&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --export &amp;lt;distribution name&amp;gt; &amp;lt;&lt;span class="nb">export&lt;/span> file name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>欄位&lt;/th>
+&lt;th>說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>&amp;lt;distribution name&amp;gt;&lt;/code>&lt;/td>
+&lt;td>WSL中要匯出的發行版名稱。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>&amp;lt;export file name&amp;gt;&lt;/code>&lt;/td>
+&lt;td>將匯出的發行版存為的檔案名稱及路徑。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="example">example&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --export Ubuntu ubuntu.tar
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>匯出後就會產生一個 tar 壓縮檔。&lt;/p>
+&lt;h3 id="匯入">匯入&lt;/h3>
+&lt;p>透過匯出產生的 tar 檔，匯入新的。&lt;/p>
+&lt;h4 id="指令-1">指令&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --import &amp;lt;new distribution name&amp;gt; &amp;lt;install location&amp;gt; &amp;lt;&lt;span class="nb">export&lt;/span> file name&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="example-1">example&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --import UbuntuDev1 .&lt;span class="se">\U&lt;/span>buntuDev1 ubuntu.tar
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>欄位&lt;/th>
+&lt;th>說明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>&amp;lt;new distribution name&amp;gt;&lt;/code>&lt;/td>
+&lt;td>匯入的 WSL 發行版的名稱。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>&amp;lt;install location&amp;gt;&lt;/code>&lt;/td>
+&lt;td>新發行版的安裝路徑。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>&amp;lt;export file name&amp;gt;&lt;/code>&lt;/td>
+&lt;td>要匯入的 &lt;code>.tar&lt;/code> 檔案。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>⚠️ 這需要注意安裝的路徑，匯入後會在當下產生一個路徑產生資料夾 作為 WSL 綁定的名稱。 (這個資料夾砍掉裡面東西就沒了)&lt;/p>
+&lt;h4 id="terminal-設定">Terminal 設定&lt;/h4>
+&lt;p>這邊還有一個小小 tips ，
+新複製出來的權限會再 root，若要開啟就是平常的使用的 user 的話，
+就加上 &lt;code>-u user&lt;/code>
+&lt;img src="../../images/windows/wsl-import-terminal-setting.png"
+loading="lazy"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>這邊 user 指得是我當初建立 Ubuntu 的使用者，可以改成你們當初建立的使用者為主。&lt;/p>
+&lt;/blockquote></description></item><item><title>WSL2 安裝錯誤 0x8004032d 問題解決</title><link>https://www.chihyu.me/2024/10/windows-wsl2-install-error-0x8004032d/</link><pubDate>Tue, 15 Oct 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/10/windows-wsl2-install-error-0x8004032d/</guid><description>&lt;img src="https://www.chihyu.me/images/windows/wsl2-banner.png" alt="Featured image of post WSL2 安裝錯誤 0x8004032d 問題解決" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>在 Windows 系統中運行 WSL（Windows Subsystem for Linux）可以讓開發者不需虛擬機就直接執行 Linux 環境，但在安裝或設定時，有時可能會遇到 WslRegisterDistribution failed with error: 0x8004032d 錯誤，通常是因為 WSL 設定不當、系統元件過舊或 Windows 設定衝突所致。本文將提供快速解決此問題的步驟。&lt;/p>
+&lt;p>&lt;img src="../../images/windows/wsl2-install-error-0x8004032d.png"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="解決方法">解決方法&lt;/h2>
+&lt;h3 id="1-確認-wsl-已正確安裝">1. 確認 WSL 已正確安裝&lt;/h3>
+&lt;p>開啟 PowerShell（以系統管理員身分執行），輸入以下命令以啟用 WSL 和虛擬機平台功能：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>完成後重啟電腦。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="2-更新-windows-系統">2. 更新 Windows 系統&lt;/h3>
+&lt;p>前往設定 &amp;gt; 更新與安全性 &amp;gt; Windows Update，檢查並安裝最新更新，並重啟電腦。&lt;/p>
+&lt;h3 id="3-確認下載最新版本的-wsl">3. 確認下載最新版本的 WSL&lt;/h3>
+&lt;p>若使用 WSL2，請前往 &lt;a class="link" href="https://learn.microsoft.com/zh-tw/windows/wsl/kernel-release-notes" target="_blank" rel="noopener"
+>Microsoft WSL 核心更新頁面&lt;/a> 下載並安裝最新版本，然後重開機。&lt;/p>
+&lt;h3 id="4-重置或註銷問題的-linux-發行版本">4. 重置或註銷問題的 Linux 發行版本&lt;/h3>
+&lt;p>在 PowerShell 中列出已安裝的發行版本：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --list --verbose
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>註銷問題的發行版本:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --unregister &amp;lt;wsl-nam&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 假設為 Ubuntu&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># example: wsl --unregister Ubuntu &lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="5-重新安裝-wsl">5. 重新安裝 WSL&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --uninstall
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">wsl --install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="6-檢查系統檔案">6. 檢查系統檔案&lt;/h3>
+&lt;p>開啟 Powershell&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sfc /scannow
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用 DISM 工具修復 Windows 映像&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">DISM /Online /Cleanup-Image /RestoreHealth
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="7-確認-hyper-v-和虛擬化功能已啟用">7. 確認 Hyper-V 和虛擬化功能已啟用&lt;/h3>
+&lt;p>在 PowerShell 啟用 Hyper-V 功能：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dism.exe /online /enable-feature /featurename:Microsoft-Hyper-V-All /all /norestart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>重新開機並進入 BIOS/UEFI 設定，確認已啟用虛擬化功能。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="8-檢查有無衝突軟體">8. 檢查有無衝突軟體&lt;/h3>
+&lt;p>更新或移除 VMware 或 VirtualBox 等虛擬化軟體，這些軟體可能與 WSL2 發生衝突。&lt;/p>
+&lt;h2 id="總結">總結&lt;/h2>
+&lt;p>當遇到 WSL 錯誤 &lt;code>0x8004032d&lt;/code>，可以透過以上步驟解決。&lt;/p>
+&lt;h3 id="參考連結">參考連結&lt;/h3>
+&lt;p>&lt;a class="link" href="https://blog.stackademic.com/how-to-fix-the-wslregisterdistribution-error-0x8004032d-in-windows-f6e9be05adf7" target="_blank" rel="noopener"
+>How to Fix the WslRegisterDistribution Error: 0x8004032d in Windows&lt;/a>&lt;/p></description></item><item><title>讓 Windows 直接使用 Linux (一) - WSL2 安裝</title><link>https://www.chihyu.me/2024/10/windows-wsl2-introduction/</link><pubDate>Tue, 01 Oct 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/10/windows-wsl2-introduction/</guid><description>&lt;img src="https://www.chihyu.me/images/windows/wsl2-banner.png" alt="Featured image of post 讓 Windows 直接使用 Linux (一) - WSL2 安裝" />&lt;h2 id="前言---開發環境選擇">前言 - 開發環境選擇&lt;/h2>
+&lt;h3 id="windows-開發">Windows 開發&lt;/h3>
+&lt;p>過去的我，使用 windows 開發程式，發現會遇到很多雷，一下組件缺少、一下更新後就狀況一堆，再加上當時要使用 docker 找不到方法使用。&lt;br>
+於是後來，我在一台電腦安裝雙系統， 開機選項增加 Linux ，解決了我不少開發上的問題雷，也能順利使用 docker。&lt;/p>
+&lt;h3 id="雙系統開發">雙系統開發&lt;/h3>
+&lt;p>雙系統，Linux 開發很好用，不過軟體我覺得還是　Windows 強很多。&lt;br>
+舉幾個 Linux 軟體難用/我不習慣的地方:&lt;/p>
+&lt;ol>
+&lt;li>LINE: 沒有 Linux 版本，我只能使用 chrome 插件，很多功能都沒有。 ex: 沒辦法回覆、沒辦法收回 等等 .. (不過後來好像更新了)&lt;/li>
+&lt;li>輸入法: 輸入法很多詞是沒有連貫的，這導致很多字都要自己選，讓打字變得很慢很不順&lt;/li>
+&lt;li>office: 從小用到大的 office 實在是太好用了，linux 只能安裝 libreoffice，雖然工程師沒什麼文件，不過當時上班，跨部門常常需要文件溝通，每次開起來就會先跑版一次。&lt;/li>
+&lt;/ol>
+&lt;p>種種問題讓我要使用軟體的時候，乾脆直接重開機，選擇 window 處理行政事務，再回去 Linux 進行開發。
+但是這樣反反覆覆，也是非常的麻煩&amp;hellip;&lt;/p>
+&lt;h3 id="發現-wsl">發現 WSL&lt;/h3>
+&lt;p>後來我發現 Windows 發布了 WSL 2 (適用於Linux的Windows子系統)，安裝上非常容易，同時也讓我解決系統切換的問題。&lt;/p>
+&lt;h2 id="安裝-wsl">安裝 WSL&lt;/h2>
+&lt;p>安裝只需兩步驟， 執行指令 &amp;amp; 重開機&lt;/p>
+&lt;h3 id="powershell-執行指令">PowerShell 執行指令&lt;/h3>
+&lt;p>系統管理員模式中開啟 PowerShell 或 Windows 命令提示字元&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wsl --install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="重新開機">重新開機&lt;/h3>
+&lt;p>安裝好後重新開機，你就會在資料夾側欄發現 Linux &amp;gt; Ubuntu ，而裡面的資料夾，就跟平常在使用 Ubuntu 的資料夾相同，&lt;br>
+&lt;img src="../../images/windows/windows-wsl-folder.png"
+loading="lazy"
+>&lt;/p>
+&lt;h3 id="選擇終端機-terminal--非必要">選擇終端機 (Terminal) [非必要]&lt;/h3>
+&lt;p>我是使用這套: &lt;a class="link" href="https://www.microsoft.com/store/productId/9N0DX20HK701?ocid=pdpshare" target="_blank" rel="noopener"
+>Windows Terminal&lt;/a>&lt;br>
+我覺得好用而且美觀。&lt;/p>
+&lt;h2 id="結語">結語&lt;/h2>
+&lt;p>如此一來，軟體的使用可以一樣依賴 Windows，程式開發的部分可以依賴 linux ubuntu。&lt;/p>
+&lt;p>而且這個 Linux 子系統完全不限於一台，我可以一台 Windows 多個 linux 也是OK的，
+像我就會分成&lt;/p>
+&lt;ol>
+&lt;li>開發公司軟體 (主要機)&lt;/li>
+&lt;li>開發公司軟體 (備用機)&lt;/li>
+&lt;li>私人使用的&lt;/li>
+&lt;li>Ubuntu 基本款的 (除原OS，會安裝一些我常用的軟體、工具)，後續若要複製出來，或是有哪一台壞掉了，可以從這邊複製出去&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>下一篇，我們來說明如何複製多台 Linux，讓一台電腦多個 Linux&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="延伸閱讀-讓-windows-直接使用-linux-二---wsl2-複製術202410wsl2-export-and-import">延伸閱讀: &lt;a class="link" href="../../2024/10/wsl2-export-and-import" >讓 Windows 直接使用 Linux (二) - WSL2 複製術&lt;/a>&lt;/h4>
+&lt;h2 id="參考連結">參考連結&lt;/h2>
+&lt;p>&lt;a class="link" href="https://learn.microsoft.com/zh-tw/windows/wsl/install" target="_blank" rel="noopener"
+>https://learn.microsoft.com/zh-tw/windows/wsl/install&lt;/a>&lt;/p></description></item><item><title>Windows WSL2 移除 Zone.Identifier 檔案</title><link>https://www.chihyu.me/2024/09/windows-wsl2-export-and-import/</link><pubDate>Wed, 25 Sep 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/09/windows-wsl2-export-and-import/</guid><description>&lt;img src="https://www.chihyu.me/images/windows/wsl2-banner.png" alt="Featured image of post Windows WSL2 移除 Zone.Identifier 檔案" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>當我們將 windows 的檔案直接複製到 wsl 裡面時，會出現好多 Zone.Identifier 的檔案&lt;/p>
+&lt;h2 id="解決方法">解決方法&lt;/h2>
+&lt;p>移動到對應的資料夾，並且執行，批次刪除:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">find . -name &lt;span class="s2">&amp;#34;*:Zone.Identifier&amp;#34;&lt;/span> -type f -delete
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="原因">原因&lt;/h2>
+&lt;p>詳細原因直接參考連結，感謝!&lt;/p>
+&lt;h2 id="參考連結">參考連結&lt;/h2>
+&lt;p>&lt;a class="link" href="https://www.sulinehk.com/post/reasons-and-solutions-for-the-zoneidentifier-file-appearing-in-wsl/" target="_blank" rel="noopener"
+>https://www.sulinehk.com/post/reasons-and-solutions-for-the-zoneidentifier-file-appearing-in-wsl/&lt;/a>&lt;/p></description></item></channel></rss>

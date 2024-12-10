@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 志宇日常</title><link>https://www.chihyu.me/tags/linux/</link><description>Recent content in Linux on 志宇日常</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 10 Dec 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://www.chihyu.me/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>如何在 Linux 上安裝 Homebrew ?</title><link>https://www.chihyu.me/2024/12/linux-homebrew-installation/</link><pubDate>Tue, 10 Dec 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/12/linux-homebrew-installation/</guid><description>&lt;img src="https://www.chihyu.me/images/linux/banner.jpg" alt="Featured image of post 如何在 Linux 上安裝 Homebrew ?" />&lt;h2 id="什麼是-homebrew">什麼是 Homebrew？&lt;/h2>
+&lt;p>Homebrew 是一個開源的套件管理工具，可以輕鬆地安裝、更新、刪除和管理軟體或開發工具。&lt;br>
+在 Linux 上，Homebrew 也能幫助你處理系統的依賴性，簡化套件的管理流程。&lt;/p>
+&lt;h2 id="安裝前的準備">安裝前的準備&lt;/h2>
+&lt;p>在開始之前，請確保你的 Linux 系統具有以下條件：&lt;/p>
+&lt;ul>
+&lt;li>支援的 Linux 發行版（如 Ubuntu、Debian 等）。&lt;/li>
+&lt;li>安裝了基本的系統工具（如 &lt;code>bash&lt;/code> 和 &lt;code>curl&lt;/code>）。&lt;/li>
+&lt;/ul>
+&lt;h2 id="安裝步驟">安裝步驟&lt;/h2>
+&lt;h3 id="安裝-homebrew">安裝 Homebrew&lt;/h3>
+&lt;p>執行以下命令來安裝 Homebrew：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">/bin/bash -c &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="將-homebrew-加入-path">將 Homebrew 加入 PATH&lt;/h3>
+&lt;p>安裝完成後，將 Homebrew 加入系統的 PATH 以便隨時使用。&lt;/p>
+&lt;p>執行以下命令來修改你的 .bashrc 文件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &amp;gt;&amp;gt; /home/你的使用者名稱/.bashrc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s1">&amp;#39;eval &amp;#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&amp;#34;&amp;#39;&lt;/span> &amp;gt;&amp;gt; /home/你的使用者名稱/.bashrc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">eval&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>/home/linuxbrew/.linuxbrew/bin/brew shellenv&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>這些命令會將 Homebrew 的路徑加到你的環境變數中，讓系統能正確找到 brew 命令。&lt;/p>
+&lt;h3 id="安裝-homebrew-的依賴">安裝 Homebrew 的依賴&lt;/h3>
+&lt;p>這個指令會安裝一組編譯工具，確保 Homebrew 可以正常運行。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt-get install build-essential
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安裝-gcc-編譯器">安裝 GCC 編譯器&lt;/h3>
+&lt;p>Homebrew 依賴 GCC（GNU 編譯器集合）來構建一些套件。&lt;/p>
+&lt;p>你可以透過以下指令安裝：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew install gcc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="測試">測試&lt;/h3>
+&lt;p>確認 brew 是否正常運行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew &lt;span class="nb">help&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="常見指令">常見指令&lt;/h2>
+&lt;h3 id="搜索套件">搜索套件：&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew search &lt;span class="o">[&lt;/span>套件名稱&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="安裝套件">安裝套件：&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew install &lt;span class="o">[&lt;/span>套件名稱&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="更新-homebrew">更新 Homebrew：&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="移除套件">移除套件：&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew uninstall &lt;span class="o">[&lt;/span>套件名稱&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="檢查系統狀態">檢查系統狀態：&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew doctor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Linux 產生 SSH Key</title><link>https://www.chihyu.me/2024/10/linux-generate-ssh-key/</link><pubDate>Tue, 29 Oct 2024 00:00:00 +0800</pubDate><guid>https://www.chihyu.me/2024/10/linux-generate-ssh-key/</guid><description>&lt;img src="https://www.chihyu.me/images/linux/banner.jpg" alt="Featured image of post Linux 產生 SSH Key" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>SSH Key 是一種基於加密的身份驗證方式，常用於遠端連線伺服器或版本控制系統（如 Git）。以下是如何在 Linux 系統上快速生成 SSH Key 的步驟。&lt;/p>
+&lt;h2 id="主要">主要&lt;/h2>
+&lt;h3 id="打開-terminal-並執行指令">打開 Terminal 並執行指令&lt;/h3>
+&lt;p>首先，開啟 Terminal 並執行以下指令來產生新的 SSH Key：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ssh-keygen -t rsa -b &lt;span class="m">4096&lt;/span> -C &lt;span class="s2">&amp;#34;your_email@example.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>指令說明:&lt;/p>
+&lt;ul>
+&lt;li>ssh-keygen：產生 SSH 金鑰的工具。&lt;/li>
+&lt;li>-t rsa：指定使用 RSA 演算法生成金鑰。&lt;/li>
+&lt;li>-b 4096：設定金鑰長度為 4096 位元，以提升安全性。&lt;/li>
+&lt;li>-C &amp;ldquo;&lt;a class="link" href="mailto:your_email@example.com" >your_email@example.com&lt;/a>&amp;rdquo;：附加一個 email 作為此金鑰的識別標籤。&lt;/li>
+&lt;/ul>
+&lt;h3 id="指定存放位置">指定存放位置&lt;/h3>
+&lt;p>執行指令後，系統會詢問是否要儲存金鑰至預設路徑（~/.ssh/id_rsa）。如果接受預設路徑，直接按下 Enter；&lt;br>
+若希望存到其他路徑，則可手動指定路徑。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">Enter file in which to save the key &lt;span class="o">(&lt;/span>/home/username/.ssh/id_rsa&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="設定密碼選填">設定密碼（選填）&lt;/h3>
+&lt;p>接著會提示是否為 SSH Key 設定密碼。這是額外的安全層，若設置密碼，在使用 SSH Key 時需要輸入該密碼。&lt;br>
+若不需要密碼，按下 Enter 跳過此步驟。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">Enter passphrase &lt;span class="o">(&lt;/span>empty &lt;span class="k">for&lt;/span> no passphrase&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="完成並確認金鑰生成">完成並確認金鑰生成&lt;/h3>
+&lt;p>完成上述步驟後，系統會生成一組公鑰（id_rsa.pub）和私鑰（id_rsa），
+分別儲存在 ~/.ssh 目錄下。您可以使用以下命令檢視生成的公鑰：&lt;/p>
+&lt;h4 id="查看公鑰">查看公鑰&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">cat ~/.ssh/id_rsa.pub
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>關閉 Linux 滑鼠滾輪鍵貼上的方法</title><link>https://www.chihyu.me/2022/12/linux-disable-mouse-middle-click-paste/</link><pubDate>Thu, 08 Dec 2022 14:00:00 +0800</pubDate><guid>https://www.chihyu.me/2022/12/linux-disable-mouse-middle-click-paste/</guid><description>&lt;img src="https://www.chihyu.me/images/linux/banner.jpg" alt="Featured image of post 關閉 Linux 滑鼠滾輪鍵貼上的方法" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>不曉得大家有沒有像我有一樣的困擾&lt;br>
+我平常開方都是使用 ubuntu&lt;br>
+不過我滑鼠在滾動的時候，有時候只要按到就會直接貼上我剛剛選取的內容&lt;/p>
+&lt;p>可能有些人會覺得便利，
+但我覺得很困擾&lt;br>
+實在用不習慣這個操作 哈哈哈&lt;/p>
+&lt;p>於是我去網路上找了解法&lt;br>
+照著做就能用&lt;/p>
+&lt;p>來源: &lt;a class="link" href="https://gist.github.com/sam0x17/f1d89df55778e4317d8974623a62e8c6" target="_blank" rel="noopener"
+>資源&lt;/a>&lt;/p>
+&lt;h2 id="操作說明">操作說明&lt;/h2>
+&lt;h3 id="安裝套件">安裝套件&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt-get install xbindkeys xsel xdotool
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="新增-xbindkeysrc-檔">新增 &lt;code>.xbindkeysrc&lt;/code> 檔&lt;/h3>
+&lt;p>在 &lt;code>~/&lt;/code> 路徑底下新增檔案 &lt;code>.xbindkeysrc&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> ~
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">touch .xbindkeysrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="新增-xbindkey-設定檔">新增 &lt;code>xbindkey&lt;/code> 設定檔&lt;/h3>
+&lt;p>提供兩個方法可以寫入&lt;/p>
+&lt;p>方法一：在 Terminal 下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">echo&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">e&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;echo -n | xsel -n -i; pkill xbindkeys; xdotool click 2; xbindkeys&amp;#34; &lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1"> b:2 + Release&amp;#39;&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">~/.&lt;/span>&lt;span class="n">xbindkeysrc&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者 ~
+方法二：開啟檔案貼上
+檔案: &lt;code>~/.xbindkeysrc&lt;/code> 寫入內容:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;echo -n | xsel -n -i; pkill xbindkeys; xdotool click 2; xbindkeys&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">b:2 + Release
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="設定加載-xbindkeys">設定加載 xbindkeys&lt;/h3>
+&lt;p>在 Terminal 下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">xbindkeys -p
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>搞定!&lt;/p></description></item></channel></rss>
